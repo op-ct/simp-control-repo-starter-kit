@@ -1,5 +1,6 @@
 ---
 # Options
+simp_options::fips: false # FIXME we're testing this now
 simp_options::auditd: true
 simp_options::clamav: false
 simp_options::dns::servers: ['8.8.8.8']
@@ -18,7 +19,7 @@ simp_options::puppet::ca: puppet
 simp_options::puppet::server: puppet
 simp_options::rsync: false
 simp_options::selinux: true
-simp_options::tcpwrappers: true
+simp_options::tcpwrappers: false
 simp_options::trusted_nets: ['ALL']
 
 sssd::domains: ['LOCAL']
@@ -39,5 +40,3 @@ simp::sudoers::default_entry:
 
 # Site configuration
 pupmod::enable_puppet_master: true
-classes:
-  - profiles::vagrant

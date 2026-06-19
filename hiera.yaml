@@ -20,16 +20,19 @@ hierarchy:
     path: 'domains/%{facts.domain}.yaml'
 
   - name: 'OS Family'
-    path: '%{facts.os.family}.yaml'
+    path: 'os/family/%{facts.os.family}.yaml'
+
+  - name: 'OS Family Major Release'
+    path: 'os/family/%{facts.os.family}/%{facts.os.release.major}.yaml'
 
   - name: 'OS Full Release'
-    path: '%{facts.os.name}/%{facts.os.release.full}.yaml'
+    path: 'os/%{facts.os.name}/%{facts.os.release.full}.yaml'
 
   - name: 'OS Major Release'
-    path: '%{facts.os.name}/%{facts.os.release.major}.yaml'
+    path: 'os/%{facts.os.name}/%{facts.os.release.major}.yaml'
 
   - name: 'OS Name'
-    path: '%{facts.os.name}.yaml'
+    path: 'os/%{facts.os.name}.yaml'
 
   - name: 'Hostgroup'
     path: 'hostgroups/%{hostgroup}.yaml'

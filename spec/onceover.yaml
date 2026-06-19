@@ -5,7 +5,9 @@ classes:
 # Nodes to tests classes on, this refers to a 'factset' or 'nodeset'
 # depending on whether you are running 'spec' or 'acceptance' tests
 nodes:
-  - example-app1--redhat-9-x86_64 
+  - example-app1--redhat-9-x86_64
+  - example-app1--redhat-8-x86_64
+  - example-app1--redhat-10-x86_64
 
 # You can group classes here to save typing
 class_groups:
@@ -17,6 +19,8 @@ class_groups:
 node_groups:
   example_app1__nodes:
     - example-app1--redhat-9-x86_64
+    - example-app1--redhat-8-x86_64
+    - example-app1--redhat-10-x86_64
 
 test_matrix:
   - example_app1__nodes:

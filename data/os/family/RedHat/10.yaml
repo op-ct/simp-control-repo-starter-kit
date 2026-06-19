@@ -1,0 +1,5 @@
+---
+# TODO fixes from old version
+# FIXME Only EL10 fails without these, suggests modules need to be updated
+auditd::plugin_dir: '/etc/audit/plugins.d'
+auditd::config::audisp::syslog::pkg_name: 'audispd-plugins'
