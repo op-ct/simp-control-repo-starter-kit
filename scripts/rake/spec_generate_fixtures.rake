@@ -4,7 +4,8 @@ require 'json'
 require 'rake/clean'
 require 'fileutils'
 
-CLEAN.include ['.fixtures.yml', 'spec/fixtures/modules']
+FIXTURE_MODULES_DIR='spec/fixtures/modules'
+CLEAN.include ['.fixtures.yml', FIXTURE_MODULES_DIR]
 
 # Most of this was quickly ripped from Onceover (https://github.com/dylanratcliffe/onceover)
 class CrSpecHelpers
@@ -52,7 +53,6 @@ class CrSpecHelpers
         elsif mod.expected_version.is_a?(String)
           # Set it up as a normal forge module
           _forge_module << {
-e,
             'repo' => mod.title,
             'ref' => mod.expected_version
           }
@@ -80,7 +80,7 @@ e,
     warn 'end of module conversion'
 
     extra_fixtures_file = File.join(_root, '.fixtures.extra.yml')
-    if File.exists? extra_fixtures_file
+    if File.exist? extra_fixtures_file
       _f = YAML.load_file( extra_fixtures_file )
       _fx = _f['fixtures']
       if _r = _fx.fetch('repositories',nil)
@@ -101,7 +101,7 @@ e,
       Dir["#{dir}/*"].each do |mod|
         _mod = Pathname.new(mod)
         if _mod.relative?
-          _fixtures_dir = Pathname.new('spec/fixtures/modules')
+          _fixtures_dir = Pathname.new(FIXTURE_MODULES_DIR)
           _dir = _mod.relative_path_from(_fixtures_dir)
         else
           _dir = Pathname.new(File.expand_path(mod))
@@ -123,7 +123,7 @@ e,
     root_dir     = CrSpecHelpers.find_control_repo_root
     template_dir = File.expand_path('templates',File.dirname(__FILE__))
     template     = File.read(File.expand_path("./#{template_name}",template_dir))
-    ERB.new(template, nil, '-').result(bind)
+    ERB.new(template, trim_mode: '-').result(bind)
   end
 
   def CrSpecHelpers.config
@@ -161,13 +161,14 @@ namespace :spec do
                     Accepts 'true' and 'false'. Defaults to 'true'.
                     Env var: OVERWRITE_FIXTURES=yes  # 'yes' or 'no'
   EOM
-  task :generate_fixtures, [:replace] do |t,args|
+  task :generate_fixtures, [:replace,:prep_fixtures_dir] do |t,args|
     args.with_defaults(:replace => (ENV.fetch('OVERWRITE_FIXTURES','yes')=='yes').to_s )
     replace = args[:replace] == 'true' ? true : false
+    prep_fixtures_dir = args[:prep_fixtures_dir] == 'true' ? true : false
 
     cr_root = CrSpecHelpers.find_control_repo_root
     fx_file = File.expand_path('./.fixtures.yml',cr_root)
-    if File.exists?(fx_file)
+    if File.exist?(fx_file)
       if replace
         FileUtils.rm_f(fx_file)
       else
@@ -178,6 +179,19 @@ namespace :spec do
     fixtures = CrSpecHelpers.fixtures
     warn "Writing '#{fx_file}'"
     File.write(fx_file,fixtures)
+
+    fixtures_modules_dir = File.join(cr_root,FIXTURE_MODULES_DIR)
+    fixtures_symlinks = YAML.safe_load(fixtures).dig('fixtures','symlinks')
+    if prep_fixtures_dir
+      FileUtils.rm_rf(fixtures_modules_dir) if File.directory?(fixtures_modules_dir)
+      FileUtils.mkdir_p(fixtures_modules_dir)
+      Dir.chdir(fixtures_modules_dir) do
+        fixtures_symlinks.each do |mod_name, symlink_path|
+          FileUtils.ln_sr(symlink_path, mod_name, target_directory: true, verbose: true)
+        end
+      end
+    end
+
   end
 
 end

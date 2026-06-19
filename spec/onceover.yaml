@@ -1,0 +1,33 @@
+# Classes to be tested
+classes:
+  - /^role::/
+
+# Nodes to tests classes on, this refers to a 'factset' or 'nodeset'
+# depending on whether you are running 'spec' or 'acceptance' tests
+nodes:
+  - example-app1--redhat-9-x86_64 
+
+# You can group classes here to save typing
+class_groups:
+
+# You can group nodes here to save typing
+# We have created a 'non_windows_nodes' group because we can't
+# give you Windows vagrant boxes to test with because licensing,
+# we can give you fact sets though so go crazy with spec testing!
+node_groups:
+  example_app1__nodes:
+    - example-app1--redhat-9-x86_64
+
+test_matrix:
+  - example_app1__nodes:
+      classes: 'role::example_app1'
+      tests: 'spec'
+
+functions:
+  puppetdb_query:
+    returns: []
+
+opts:
+  :debug: true
+  :manifest: 'manifests/site.pp'
+  :auto_vendored: true

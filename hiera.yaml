@@ -1,58 +1,49 @@
 ---
-version: 4
-datadir: data
+# Basic Hiera 5 Hierarchy
+version: 5
+defaults:
+  datadir: data
+  data_hash: yaml_data
 
-# SIMP Defaults. Complete documentation can be found below.
-# https://docs.puppet.com/puppet/4.9/hiera_config_yaml_4.html
 hierarchy:
+  # Tiers for specific keys first, overriding broader-key tiers later
   - name: 'Trusted Certname'
-    path: 'hosts/%{trusted.certname}'
-    backend: yaml
+    path: 'hosts/%{trusted.certname}.yaml'
 
-  - name: 'Fqdn'
-    path: 'hosts/%{facts.fqdn}'
-    backend: yaml
+  - name: 'FQDN (prefer trusted certname)'
+    path: 'hosts/%{facts.fqdn}.yaml'
 
   - name: 'Hostname'
-    path: 'hosts/%{facts.hostname}'
-    backend: yaml
+    path: 'hosts/%{facts.hostname}.yaml'
 
   - name: 'Domain'
-    path: 'domains/%{facts.domain}'
-    backend: yaml
+    path: 'domains/%{facts.domain}.yaml'
 
   - name: 'OS Family'
-    path: '%{facts.os.family}'
-    backend: yaml
+    path: '%{facts.os.family}.yaml'
 
   - name: 'OS Full Release'
-    path: '%{facts.os.name}/%{facts.os.release.full}'
-    backend: yaml
+    path: '%{facts.os.name}/%{facts.os.release.full}.yaml'
 
   - name: 'OS Major Release'
-    path: '%{facts.os.name}/%{facts.os.release.major}'
-    backend: yaml
+    path: '%{facts.os.name}/%{facts.os.release.major}.yaml'
 
   - name: 'OS Name'
-    path: '%{facts.os.name}'
-    backend: yaml
+    path: '%{facts.os.name}.yaml'
 
   - name: 'Hostgroup'
-    path: 'hostgroups/%{hostgroup}'
-    backend: yaml
+    path: 'hostgroups/%{hostgroup}.yaml'
 
   - name: 'Default or Common'
-    paths: ['default','common']
-    backend: yaml
+    paths: 
+      - 'default.yaml'
+      - 'common.yaml'
 
   - name: 'Compliance Profiles'
-    path: 'compliance_profiles/%{compliance_profile}'
-    backend: yaml
+    path: 'compliance_profiles/%{compliance_profile}.yaml'
 
   - name: 'Settings from SIMP Config'
-    path: 'simp_config_settings'
-    backend: yaml
+    path: 'simp_config_settings.yaml'
 
   - name: 'SIMP Scenarios'
-    path: 'scenarios/%{simp_scenario}'
-    backend: yaml
+    path: 'scenarios/%{simp_scenario}.yaml'
