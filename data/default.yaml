@@ -1,6 +1,6 @@
 ---
 # Options
-simp_options::fips: false # FIXME we're testing this now
+simp_options::fips: true # FIXME we're testing this now
 simp_options::auditd: true
 simp_options::clamav: false
 simp_options::dns::servers: ['8.8.8.8']

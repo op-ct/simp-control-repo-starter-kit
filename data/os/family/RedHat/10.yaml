@@ -1,5 +1,13 @@
 ---
 # TODO fixes from old version
 # FIXME Only EL10 fails without these, suggests modules need to be updated
+#
+# NOTE auditd 9.-+ supports EL10 -- 10.0+ drops CentOS 8 (keeps other EL8s)
 auditd::plugin_dir: '/etc/audit/plugins.d'
 auditd::config::audisp::syslog::pkg_name: 'audispd-plugins'
+
+# NOTE selinux 3.0+ supports EL10 -- 4.0+ drops Puppet 7, CentOS 8 (keeps other EL8s)
+selinux::mcstrans_service_name: mcstransd
+selinux::manage_restorecond_package: false
+selinux::manage_restorecond_service: false
+selinux::restorecond_package_name: policycoreutils-restorecond
