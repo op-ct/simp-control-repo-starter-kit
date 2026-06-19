@@ -3,7 +3,9 @@
 # ==============================================================================
 # The line below enables this Puppetfile to deploy all of SIMP's modules from a
 # neighboring 'Puppetfile.smp' file:
-instance_eval(File.read(File.join(__dir__,'Puppetfile.simp')))
+SIMP_PUPPETFILE=File.join(__dir__,ENV['SIMP_PUPPETFILE']||'Puppetfile.simp')
+fail("Puppetfile not found: '#{SIMP_PUPPETFILE}'") unless File.exist?(SIMP_PUPPETFILE)
+instance_eval(File.read(SIMP_PUPPETFILE))
 
 # ==============================================================================
 # Multi-tenant x Multi-site  example code and data
