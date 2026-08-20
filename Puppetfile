@@ -30,17 +30,40 @@ instance_eval(File.read(SIMP_PUPPETFILE))
 # Tenant-level (all tenants and sites share) 
 # ------------------------------------------------------------------------------
 # Environment variable is set to deploy the correct repo for tenant, site
-# deploy_tenant = ENV.fetch('DEPLOY_TENANT','').split(/, /) 
-# deploy_site   = ENV.fetch('DEPLOY_SITE','').split(/, */)
 #
-# if deploy_tenant.empty?
-#   fail('ERROR: This Puppetfile requires the environment variable DEPLOY_TENANT to deploy tenant-specific modules')
-# end
-# tenant_puppetfile = File.join(__dir__,"Puppetfile.#{deploy_tenant}") 
-# unless File.exist?( tenant_puppetfile )
-#   fail("ERROR: Tenant Puppetfile 
-# end
+# Tenant-specific Hiera data
+#mod 'tenant',
+#    :install_path => 'data',
+#    :local        => true
 #
-# if deploy_site,empty?
-#   fail('ERROR: This Puppetfile requires the environment variable DEPLOY_TENANT to deploy site-specific hiera data')
-# end
+#deploy_tenant = ENV.fetch('DEPLOY_TENANT','').split(/, */) 
+#deploy_sites  = ENV.fetch('DEPLOY_SITE','').split(/, */)
+#
+#if deploy_tenant.empty?
+#  fail('ERROR: This Puppetfile requires the environment variable DEPLOY_TENANT to deploy tenant-specific modules')
+#end
+#tenant_puppetfile = File.join(__dir__,"Puppetfile.#{deploy_tenant}") 
+#unless File.exist?(tenant_puppetfile)
+#  fail("ERROR: Tenant Puppetfile does not exist: '#{tenant_puppetfile}'")
+#end
+#instance_eval(File.read(tenant_puppetfile))
+#
+#if deploy_sites.empty?
+#  fail('ERROR: This Puppetfile requires the environment variable DEPLOY_SITE to deploy site-specific hiera data')
+#end
+#
+#unless deploy_sites.first =~ /none/i
+#  deploy_sites.each do |deploy_site|
+#    git_url = "git@git.example.tld:group/puppet_hiera_#{deploy_tenant}_#{deploy_site}.git"
+#    default_branch = "#{deploy_tenant}_#{deploy_site}"
+#    puts "----- Deploying site data for #{deploy_site} (default branch: #{default_branch})..."
+#    puts "-----    #{git_url}"
+#
+#    mod "sites/#{deploy_site}",
+#      :git            => git_url,
+#      :install_path   => 'data/sites',
+#      :branch         => :control_branch,
+#      :default_branch => default_branch
+#
+#  end
+#end
